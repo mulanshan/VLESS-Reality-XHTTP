@@ -4,7 +4,7 @@
 
 ## 一键脚本
 ```
-bash <(curl -fsSL xray-bay.vercel.app)
+bash <(curl -fsSL https://raw.githubusercontent.com/mulanshan/VLESS-Reality-XHTTP/main/Xray.sh)
 ```
 
 ## Xray指令
