@@ -72,9 +72,9 @@ xray() {
         "network": "tcp",
         "security": "reality",
         "realitySettings": {
-          "target": "www.ua.edu:443",
+          "target": "www.ucla.edu:443",
           "serverNames": [
-            "www.ua.edu"
+            "www.ucla.edu"
           ],
           "privateKey": "${PrivateKey}",
           "shortIds": [
@@ -103,9 +103,9 @@ xray() {
         },   
         "security": "reality",
         "realitySettings": {
-          "target": "www.ua.edu:443",
+          "target": "www.ucla.edu:443",
           "serverNames": [
-            "www.ua.edu"
+            "www.ucla.edu"
           ],
           "privateKey": "${PrivateKey}",
           "shortIds": [
