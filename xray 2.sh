@@ -22,18 +22,13 @@ root() {
 
 # 获取随机端口
 port() {    
-    local port1 port2    
-    port1=$(shuf -i 1024-65000 -n 1)
-    while ss -ltn | grep -q ":$port1"; do
-        port1=$(shuf -i 1024-65000 -n 1)
+    local port    
+    port=$(shuf -i 1024-65000 -n 1)
+    while ss -ltn | grep -q ":$port"; do
+        port=$(shuf -i 1024-65000 -n 1)
     done    
-    port2=$(shuf -i 1024-65000 -n 1)
-    while ss -ltn | grep -q ":$port2" || [ "$port2" -eq "$port1" ]; do
-        port2=$(shuf -i 1024-65000 -n 1)
-    done
     
-    PORT1=$port1
-    PORT2=$port2    
+    PORT=$port 
 }
 
 # 配置和启动Xray
@@ -56,7 +51,7 @@ xray() {
   },
   "inbounds": [
     {
-      "port": "${PORT1}",
+      "port": "${PORT}",
       "tag": "vless-tcp",
       "protocol": "vless",
       "settings": {
@@ -83,36 +78,6 @@ xray() {
         }
       }
     },
-    {
-      "port": "${PORT2}",
-      "tag": "vless-xhttp",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "${uuid}",
-            "flow": ""
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "xhttp",
-        "xhttpSettings": {
-            "path": "/${path}"
-        },   
-        "security": "reality",
-        "realitySettings": {
-          "target": "www.ucla.edu:443",
-          "serverNames": [
-            "www.ucla.edu"
-          ],
-          "privateKey": "${PrivateKey}",
-          "shortIds": [
-            "${shid}"
-          ]
-        }
-      },
       "sniffing": {
         "enabled": true,
         "destOverride": [
@@ -156,10 +121,8 @@ EOF
     cat << EOF > /usr/local/etc/xray/config.txt
 
 vless-tcp-reality
-vless://${uuid}@${HOST_IP}:${PORT1}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.ua.edu&fp=chrome&pbk=${PublicKey}&sid=${shid}&type=tcp&headerType=none#${IP_COUNTRY}
+vless://${uuid}@${HOST_IP}:${PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=www.ua.edu&fp=chrome&pbk=${PublicKey}&sid=${shid}&type=tcp&headerType=none#${IP_COUNTRY}
 
-vless-xhttp-reality
-vless://${uuid}@${HOST_IP}:${PORT2}?encryption=none&security=reality&sni=www.ua.edu&fp=chrome&pbk=${PublicKey}&sid=${shid}&type=xhttp&path=%2F${path}&mode=auto#${IP_COUNTRY}
 EOF
 
     echo "Xray 安装完成"
